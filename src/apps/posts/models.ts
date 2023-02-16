@@ -45,4 +45,11 @@ export class Post {
     const [posts] = data;
     return posts as Post[] | undefined;
   };
+  public static updateById = async (id: number, fields: { body: string }) => {
+    let sql = `UPDATE ${this.tableName} SET body=? where id=?`;
+    await DB.query(sql, [fields.body, id]);
+    //@ts-ignore
+    const [post] = await Post.findById(id);
+    return post;
+  };
 }

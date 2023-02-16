@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import express, { Express } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 
 import { postsRouter } from "./apps/posts/routes";
@@ -14,6 +14,12 @@ const server = async () => {
   //register apps
   registerApps(app);
   //listen for requests
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log(err.stack);
+    console.log(err.message);
+    console.log(err.name);
+    res.sendStatus(500);
+  });
   app.listen(process.env.PORT ?? 3000, () => {
     console.log(`running  server on port ${process.env.PORT} `);
   });
