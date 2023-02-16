@@ -27,9 +27,9 @@ export class Post {
 
   public save = async () => {
     const sql = `INSERT INTO ${Post.tableName}(body) values (?)`;
-    const data = await DB.query(sql, [this.body]);
-    console.log(data);
-    return data;
+    //@ts-ignore
+    const [result] = await DB.query(sql, [this.body]);
+    return Post.findById(result.insertId);
   };
   public static findById = async (id: number) => {
     const data = await DB.query(`SELECT * FROM ${this.tableName} where id =?`, [
@@ -37,14 +37,7 @@ export class Post {
     ]);
     //@ts-ignore
     const [post] = data;
-
-    console.log("data", post);
-    return new Post({
-      body: "body",
-      createdAt: new Date(),
-      id: 1,
-      updatedAt: new Date(),
-    });
+    return post as Post;
   };
   public static findAll = async () => {
     const data = await DB.query(`SELECT * FROM ${this.tableName} `);

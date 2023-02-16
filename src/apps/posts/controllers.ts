@@ -2,10 +2,9 @@ import { Request, Response } from "express";
 import { Post } from "./models";
 export const addPostController = async (req: Request, res: Response) => {
   // const post = await Post.findById(1);
-  const post = new Post({ body: "hello body v1" });
-  const r = await post.save();
-  console.log(r);
-
+  const { body } = req.body;
+  let post = new Post({ body });
+  post = await post.save();
   res.status(200).json(post);
 };
 export const getAllPostsController = async (req: Request, res: Response) => {
