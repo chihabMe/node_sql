@@ -1,46 +1,55 @@
+import { RowDataPacket } from "mysql2";
 import { DB } from "../../core/database";
 
 export class Post {
   public static tableName = "posts";
-  public id: number = 0;
-  public title: string = "";
-  public body: string = "";
-  public created: Date = new Date();
-  public updated: Date = new Date();
+  public id?: number;
+  public body: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
 
   constructor({
     id,
-    title,
     body,
-    created,
-    updated,
+    createdAt,
+    updatedAt,
   }: {
-    id: number;
-    title: string;
+    id?: number;
     body: string;
-    created: Date;
-    updated: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
   }) {
-    this.title = title;
     this.body = body;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.id = id;
   }
 
-  public static findById = async (id: number) => {
-    const data = DB.query(
-      `SELECT * FROM ${this.tableName} where id =?`,
-      [id],
-      (err, result, fields) => {
-        if (err) console.log(err);
-        return result;
-      }
-    );
+  public save = async () => {
+    const sql = `INSERT INTO ${Post.tableName}(body) values (?)`;
+    const data = await DB.query(sql, [this.body]);
     console.log(data);
+    return data;
+  };
+  public static findById = async (id: number) => {
+    const data = await DB.query(`SELECT * FROM ${this.tableName} where id =?`, [
+      id,
+    ]);
+    //@ts-ignore
+    const [post] = data;
+
+    console.log("data", post);
     return new Post({
       body: "body",
-      created: new Date(),
+      createdAt: new Date(),
       id: 1,
-      title: "title",
-      updated: new Date(),
+      updatedAt: new Date(),
     });
+  };
+  public static findAll = async () => {
+    const data = await DB.query(`SELECT * FROM ${this.tableName} `);
+    //@ts-ignore
+    const [posts] = data;
+    return posts as Post[] | undefined;
   };
 }
