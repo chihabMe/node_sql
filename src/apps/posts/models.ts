@@ -47,11 +47,16 @@ export class Post extends BasicModel {
     const [posts] = data;
     return posts as Post[] | undefined;
   };
-  public static updateById = async (id: number, fields: { body: string }) => {
-    let sql = `UPDATE ${this.tableName} SET body=? where id=?`;
-    await DB.query(sql, [fields.body, id]);
-    //@ts-ignore
-    const [post] = await Post.findById(id);
-    return post;
+  public static updateById = async (
+    id: number,
+    fields: string[],
+    values: string[]
+  ) => {
+    // let sql = `UPDATE ${this.tableName} SET body=? where id=?`;
+    // await DB.query(sql, [fields.body, id]);
+    // //@ts-ignore
+    // const [post] = await Post.findById(id);
+    // return post;
+    return (await super.updateById(id, fields, values, this.tableName)) as Post;
   };
 }

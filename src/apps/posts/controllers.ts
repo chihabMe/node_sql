@@ -33,7 +33,7 @@ export const updatePostController = async (
   const postId = req.params.id;
   const { body } = req.body;
   try {
-    const post = await Post.updateById(postId, { body });
+    const post = await Post.updateById(postId, ["body"], [body]);
     return res.status(200).json(post);
   } catch (err) {
     next(err);
