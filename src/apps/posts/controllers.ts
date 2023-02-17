@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, query, Request, Response } from "express";
 import { Post } from "./models";
 export const addPostController = async (req: Request, res: Response) => {
   // const post = await Post.findById(1);
@@ -34,6 +34,19 @@ export const updatePostController = async (
   const { body } = req.body;
   try {
     const post = await Post.updateById(postId, ["body"], [body]);
+    return res.status(200).json(post);
+  } catch (err) {
+    next(err);
+  }
+};
+export const deletePostController = async (
+  req: Request<{ id: number }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    const post = await Post.deleteById(id);
     return res.status(200).json(post);
   } catch (err) {
     next(err);

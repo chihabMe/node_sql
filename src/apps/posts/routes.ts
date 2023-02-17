@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addPostController,
+  deletePostController,
   getAllPostsController,
   getPostByIdController,
   updatePostController,
@@ -12,3 +13,4 @@ postsRouter.get("/", getAllPostsController);
 postsRouter.post("/", addPostController);
 postsRouter.get("/:id", getPostByIdController);
 postsRouter.put("/:id", updatePostController);
+postsRouter.delete("/:id", deletePostController);

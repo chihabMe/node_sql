@@ -38,4 +38,10 @@ export class BasicModel {
     await DB.query(sql, [values]);
     return await this.findById(id, tableName);
   };
+  public static deleteById = async (id: number, tableName: string) => {
+    const data = await this.findById(id, tableName);
+    let sql = `DELETE FROM posts WHERE id = ? `;
+    await DB.query(sql, [id]);
+    return data;
+  };
 }

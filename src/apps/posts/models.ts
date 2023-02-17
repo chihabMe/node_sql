@@ -59,4 +59,6 @@ export class Post extends BasicModel {
     // return post;
     return (await super.updateById(id, fields, values, this.tableName)) as Post;
   };
+  public static deleteById = async (id: number) =>
+    (await super.deleteById(id, this.tableName)) as Post;
 }
