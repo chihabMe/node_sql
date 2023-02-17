@@ -11,15 +11,14 @@ export const DB: Pool = createPool({
   port: getDbConfig().port,
 }).promise();
 
-const createDatabaseTables = async () => {
-  const sql =
-    "CREATE TABLE posts    (" +
-    "id INT PRIMARY KEY AUTO_INCREMENT," +
-    "body TEXT," +
-    "created_at DATETIME DEFAULT(now())," +
-    "updated_at DATETIME DEFAULT(now()));";
-  const result = await DB.query(sql);
-  // console.log(result);
-};
-
-if (require.main == module) createDatabaseTables();
+export class BasicModel {
+  public static findById = async (id: number, tableName: string) => {
+    const sql = `SELECT * FROM ${tableName} WHERE id =?`;
+    console.log(`executing query ${sql}`, id);
+    const data = await DB.query(sql, [id]);
+    //@ts-ignore
+    const result = data[0][0];
+    if (!result) throw new Error("not found");
+    return result as BasicModel;
+  };
+}

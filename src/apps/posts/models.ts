@@ -1,7 +1,7 @@
 import { RowDataPacket } from "mysql2";
-import { DB } from "../../core/database";
+import { BasicModel, DB } from "../../core/database";
 
-export class Post {
+export class Post extends BasicModel {
   public static tableName = "posts";
   public id?: number;
   public body: string;
@@ -19,6 +19,7 @@ export class Post {
     createdAt?: Date;
     updatedAt?: Date;
   }) {
+    super();
     this.body = body;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -32,12 +33,13 @@ export class Post {
     return Post.findById(result.insertId);
   };
   public static findById = async (id: number) => {
-    const data = await DB.query(`SELECT * FROM ${this.tableName} where id =?`, [
-      id,
-    ]);
-    //@ts-ignore
-    const [post] = data;
-    return post as Post;
+    // const data = await DB.query(`SELECT * FROM ${this.tableName} where id =?`, [
+    //   id,
+    // ]);
+    // //@ts-ignore
+    // const [post] = data;
+    // return post as Post;
+    return (await super.findById(id, this.tableName)) as Post;
   };
   public static findAll = async () => {
     const data = await DB.query(`SELECT * FROM ${this.tableName} `);

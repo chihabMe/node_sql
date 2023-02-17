@@ -12,6 +12,19 @@ export const getAllPostsController = async (req: Request, res: Response) => {
   console.log(posts);
   res.status(200).json(posts);
 };
+export const getPostByIdController = async (
+  req: Request<{ id: number }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.id;
+    const post = await Post.findById(id);
+    return res.status(200).json(post);
+  } catch (err) {
+    next(err);
+  }
+};
 export const updatePostController = async (
   req: Request<{ id: number }>,
   res: Response,

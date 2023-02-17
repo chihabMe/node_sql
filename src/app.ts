@@ -18,7 +18,11 @@ const server = async () => {
     console.log(err.stack);
     console.log(err.message);
     console.log(err.name);
-    res.sendStatus(500);
+    if (err.message == "not found") next();
+    else res.sendStatus(500);
+  });
+  app.use((req, res) => {
+    res.sendStatus(404);
   });
   app.listen(process.env.PORT ?? 3000, () => {
     console.log(`running  server on port ${process.env.PORT} `);
