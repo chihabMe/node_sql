@@ -3,8 +3,10 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 
 import { postsRouter } from "./apps/posts/routes";
+import { accountsRouter } from "./apps/accounts/routes";
 const registerApps = (app: Express) => {
   app.use("/api/v1/posts", postsRouter);
+  app.use("/api/v1/accounts", accountsRouter);
 };
 const server = async () => {
   const app = express();

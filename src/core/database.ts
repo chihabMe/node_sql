@@ -45,12 +45,12 @@ export class BasicModel {
     return data;
   };
   public async save(tableName: string, fields: string[], values: string[]) {
-    const sql =
-      `INSERT INTO TABLE ${tableName} $()` +
-      fields.map((field, idx) =>
-        idx == 0 ? field + "=?" : "," + field + "=?"
-      );
+    let sql = `INSERT INTO  ${tableName} (` + fields.map((field, idx) => field);
+    sql += ") VALUES (";
+    sql += fields.map((_, idx) => "?");
+    sql += ");";
 
+    console.log("RUN SQL ==  ", sql);
     //@ts-ignore
     const [result] = await DB.query(sql, values);
     return await BasicModel.findById(result.insertId, tableName);
@@ -69,5 +69,13 @@ export class BasicModel {
     //@ts-ignore
     const result = data[0];
     return result as BasicModel[];
+  }
+  public static async findByX(x: string, xValue: string, tableName: string) {
+    const sql = `SELECT * FROM ${tableName} WHERE ${x} =?`;
+    console.log(`executing query ${sql}`, xValue);
+    const data = await DB.query(sql, [xValue]);
+    //@ts-ignore
+    const result = data[0][0];
+    return result;
   }
 }
