@@ -8,9 +8,14 @@ export const addPostController = async (req: Request, res: Response) => {
   res.status(200).json(post);
 };
 export const getAllPostsController = async (req: Request, res: Response) => {
-  const posts = await Post.findAll();
-  console.log(posts);
-  res.status(200).json(posts);
+  const offset = 0;
+  console.log("run");
+  const posts = await Post.findAll(offset, 10);
+  res.status(200).json({
+    page: offset + 1,
+    count: posts.length,
+    results: posts,
+  });
 };
 export const getPostByIdController = async (
   req: Request<{ id: number }>,

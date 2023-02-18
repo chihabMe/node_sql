@@ -38,12 +38,12 @@ export class Post extends BasicModel {
   public static findById = async (id: number) => {
     return (await super.findById(id, this.tableName)) as Post;
   };
-  public static findAll = async () => {
-    const data = await DB.query(`SELECT * FROM ${this.tableName} `);
-    //@ts-ignore
-    const [posts] = data;
-    return posts as Post[] | undefined;
-  };
+
+  public static async findAll(offset?: number, limit?: number) {
+    if (!offset) offset = 0;
+    if (!limit) limit = 10;
+    return (await super.findAll(offset, limit, this.tableName)) as Post[];
+  }
   public static updateById = async (
     id: number,
     fields: string[],

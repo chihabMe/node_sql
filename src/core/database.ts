@@ -55,4 +55,19 @@ export class BasicModel {
     const [result] = await DB.query(sql, values);
     return await BasicModel.findById(result.insertId, tableName);
   }
+
+  public static async findAll(
+    offset: number,
+    limit: number,
+    tableName: string
+  ) {
+    if (!offset) offset = 0;
+    if (!limit) limit = 10;
+    const sql = `SELECT * FROM ${tableName} LIMIT ${offset},${limit}`;
+    console.log(`executing query ${sql}`);
+    const data = await DB.query(sql);
+    //@ts-ignore
+    const result = data[0];
+    return result as BasicModel[];
+  }
 }
