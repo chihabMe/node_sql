@@ -3,7 +3,7 @@ import { Post } from "./models";
 export const addPostController = async (req: Request, res: Response) => {
   // const post = await Post.findById(1);
   const { body } = req.body;
-  let post = new Post({ body });
+  let post = new Post({ body, user_id: 1 });
   post = await post.save();
   res.status(200).json(post);
 };

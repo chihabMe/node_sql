@@ -1,34 +1,34 @@
+import bcrypt from "bcrypt";
+import { BasicModel, DB } from "../../core/database";
 
-import bcrypt from "bcrypt"
-import { DB } from "../../core/database";
+export class User extends BasicModel {
+  public static tableName = "users";
+  public username: string;
+  public email: string;
+  public password?: string;
+  public id?: number;
 
-export class User{
-    public static tableName="users"
-    public this.username:string;
-    public this.email:string;
-    public this.password?:string;
-    public this.id?:number;
+  constructor(username: string, email: string) {
+    super();
+    this.username = username;
+    this.email = email;
+  }
 
-    construction({username,email}:{username:string,email:string}){
-        this.username=username;
-        this.email=email
-    }
+  save = async (): Promise<User> => {
+    const sql = `INSERT INTO ${User.tableName} (username,email,password) values (?,?,?)`;
+    //@ts-ignore
+    const [result] = await await DB.query(sql, [
+      this.username,
+      this.email,
+      this.password,
+    ]);
+  };
 
-    const save= async():Promise<User>=>{
-        const sql = `INSERT INTO ${User.tableName} (username,email,password) values (?,?,?)`
-        //@ts-ignore
-        const [result] = await await DB.query(sql,[this.username,this.email,this.password])
-    }
-    
-
-    const setPassword = (password:string)=>{
-        const hash = bcrypt.hashSync(password,10)
-        this.password=password
-    }
-    const comparePassword = (password:string)=>{
-        return bcrypt.compareSync(password,this.password) 
-
-    }
-
-
+  setPassword = (password: string) => {
+    const hash = bcrypt.hashSync(password, 10);
+    this.password = password;
+  };
+  comparePassword = (password: string) => {
+    return bcrypt.compareSync(password, this.password);
+  };
 }

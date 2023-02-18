@@ -19,7 +19,7 @@ export class BasicModel {
     //@ts-ignore
     const result = data[0][0];
     if (!result) throw new Error("not found");
-    return result as BasicModel;
+    return result;
   };
   public static updateById = async (
     id: number,
@@ -44,4 +44,15 @@ export class BasicModel {
     await DB.query(sql, [id]);
     return data;
   };
+  public async save(tableName: string, fields: string[], values: string[]) {
+    const sql =
+      `INSERT INTO TABLE ${tableName} $()` +
+      fields.map((field, idx) =>
+        idx == 0 ? field + "=?" : "," + field + "=?"
+      );
+
+    //@ts-ignore
+    const [result] = await DB.query(sql, values);
+    return await BasicModel.findById(result.insertId, tableName);
+  }
 }

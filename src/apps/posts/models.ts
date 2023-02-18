@@ -7,15 +7,18 @@ export class Post extends BasicModel {
   public body: string;
   public createdAt?: Date;
   public updatedAt?: Date;
+  public user_id: number;
 
   constructor({
     id,
     body,
     createdAt,
     updatedAt,
+    user_id,
   }: {
     id?: number;
     body: string;
+    user_id: number;
     createdAt?: Date;
     updatedAt?: Date;
   }) {
@@ -24,21 +27,15 @@ export class Post extends BasicModel {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.id = id;
+    this.user_id = user_id;
   }
 
-  public save = async () => {
-    const sql = `INSERT INTO ${Post.tableName}(body) values (?)`;
-    //@ts-ignore
-    const [result] = await DB.query(sql, [this.body]);
-    return Post.findById(result.insertId);
-  };
+  public async save() {
+    const fields = ["body", "user_id"];
+    const values = [this.body, this.user_id.toString()];
+    return super.save(Post.tableName, fields, values) as Promise<Post>;
+  }
   public static findById = async (id: number) => {
-    // const data = await DB.query(`SELECT * FROM ${this.tableName} where id =?`, [
-    //   id,
-    // ]);
-    // //@ts-ignore
-    // const [post] = data;
-    // return post as Post;
     return (await super.findById(id, this.tableName)) as Post;
   };
   public static findAll = async () => {
@@ -52,11 +49,6 @@ export class Post extends BasicModel {
     fields: string[],
     values: string[]
   ) => {
-    // let sql = `UPDATE ${this.tableName} SET body=? where id=?`;
-    // await DB.query(sql, [fields.body, id]);
-    // //@ts-ignore
-    // const [post] = await Post.findById(id);
-    // return post;
     return (await super.updateById(id, fields, values, this.tableName)) as Post;
   };
   public static deleteById = async (id: number) =>
